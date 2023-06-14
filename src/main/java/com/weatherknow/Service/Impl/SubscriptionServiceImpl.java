@@ -12,24 +12,24 @@ import com.weatherknow.Repositories.CitiesRepo;
 import com.weatherknow.Repositories.SubscriptionRepo;
 import com.weatherknow.Service.FeignClient;
 import com.weatherknow.Service.SubscriptionService;
+import com.weatherknow.Service.TemplateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
     @Value("${key}")
     private String key;
+    private final TemplateService templateService;
     private final FeignClient feignClient;
     private final CitiesRepo citiesRepo;
     private final SubscriptionRepo subscriptionRepo;
@@ -84,14 +84,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscription.setEmail(subscriptionModel.email().toLowerCase().trim());
         subscription.getCitiesList().addAll(citiesFound);
         this.subscriptionRepo.save(subscription);
+        this.templateService.sendUpdates(subscription);
 
-        AtomicReference<String> message = new AtomicReference<>("Successfully subscribed!");
+        StringBuilder message = new StringBuilder("Successfully subscribed!");
         if(!citiesNotFound.isEmpty()){
             citiesNotFound.forEach((city)->{
-                message.set(message + ", " + city);
+                message.append(", ").append(city);
             });
-            message.set(message + " are not found!!");
+            message.append(" are not found!!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(message.get(), true));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(message.toString(), true));
     }
 }

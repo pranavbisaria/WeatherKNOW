@@ -15,6 +15,6 @@ public class SubscriptionController {
 
     @PostMapping("/subscribe")
     ResponseEntity<?> subscribeNotification(@RequestBody SubscriptionModel subscriptionModel){
-        this.subscriptionService.
+        return this.subscriptionService.subscribe(subscriptionModel);
     }
 }
