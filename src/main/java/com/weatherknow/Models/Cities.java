@@ -20,10 +20,10 @@ public class Cities {
     private String name;
     private String tz_id;
     private LocalDateTime last_updated;
-    private float temp_c;
-    private float temp_f;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Condition> condition = new ArrayList<>(0);
-    private float humidity;
-    private float cloud;
+    private Double temp_c;
+    private Double temp_f;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Condition condition;
+    private Double humidity;
+    private Double cloud;
 }

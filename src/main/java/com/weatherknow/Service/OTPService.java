@@ -1,6 +1,7 @@
 package com.weatherknow.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -10,10 +11,11 @@ import java.util.Random;
 public class OTPService {
     private final EmailService emailService;
 
-    public int OTPRequest(String email) {
+    @Async
+    public void OTPRequest(String email, String name) {
         Random rand = new Random();
         int otpCheck = rand.nextInt(899999) + 100000;
-        String subject = "OTP Verification";
+        String subject = "Successfully subscribed to WeatherKNOW";
         String message = "Dear User," +
                 "\nThe One Time Password (OTP) to verify your Email Address is " + otpCheck +
                 "\nThe One Time Password is valid for the next 10 minutes." +
@@ -22,9 +24,9 @@ public class OTPService {
                 "\nPranav Bisaria";
         String to = email;
         this.emailService.sendEmail(subject, message, to);
-        return otpCheck;
     }
 
+    @Async
     public void SuccessRequest(String email, String name) {
         String subject = "Successfully registered on Pranav's Backend Server";
         String message = "Dear " + name + "," +
