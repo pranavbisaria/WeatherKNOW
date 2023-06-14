@@ -10,7 +10,7 @@ import java.util.Properties;
 
 @Service
 public class EmailService {
-    @Async
+    @Async // Making the below method asynchronous for a faster API response, also making the scheduling faster
     public void sendEmail(String subject, String message, String to) {
         String from = "me.pranavbisaria@gmail.com";
         String host = "smtp.gmail.com";

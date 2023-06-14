@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableFeignClients
-@EnableCaching
 @EnableAsync
 @OpenAPIDefinition(info = @Info(title = "WeatherKNOW",version = "1.0",description = "Get scheduled your weather updates on your e-mail"))
 @EnableScheduling
