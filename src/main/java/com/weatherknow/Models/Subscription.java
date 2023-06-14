@@ -17,6 +17,6 @@ public class Subscription {
     @Id
     private String email;
     private String name;
-    @ManyToMany(mappedBy = "subscription", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Cities> citiesList= new ArrayList<>(0);
 }

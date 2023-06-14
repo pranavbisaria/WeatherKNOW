@@ -10,32 +10,32 @@ public class TemplateService {
     private final EmailService emailService;
     public void sendUpdates(Subscription subscription) {
         String subject = "Successfully subscribed to WeatherKNOW";
-        StringBuilder message = new StringBuilder("<!DOCTYPE html><html lang=\"en\"><head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>WeathterKNOW</title> <style> *{ overflow-x: hidden; } body { margin: 0; padding: 0; background-color: rgb(165, 188, 232); } #logo{ width: 400px; } #content { width: 100%; background-image: url(\"/bg.webp\"); background-repeat: repeat-y; background-size:cover; display: flex; flex-wrap: wrap; flex-direction: column; align-items: center; justify-content: center; } .flex { padding: 0; margin: auto; width: 100%; display: flex; flex-wrap: wrap; flex-direction: column; align-items: center; justify-content: center; } #footer { color: aliceblue; text-align: center; height: 20%; margin: 0%; padding: 0; background-color: rgb(44, 50, 62); } #weatherBlock{ margin: 30px; width: 300px; background-color: rgba(0, 0, 0, 0.339); border-radius: 20px; padding: 20px; } </style></head><body> <div class=\"flex\"> <img id=\"logo\" src=\"/logo.webp\" alt=\"logo\"> <div id=\"content\"> <h2>Hey ");
+        StringBuilder message = new StringBuilder("<!DOCTYPE html><html lang=\"en\"><head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>WeatherKNOW</title> <style> * { overflow-x: hidden; } body { margin: 0; padding: 0; background-color: rgb(165, 188, 232); } #logo { display: block; margin: auto; width: 400px; } .main { width: 100%; background-image: url(\"https://raw.githubusercontent.com/pranavbisaria/WeatherKNOW/master/src/main/resources/static/bg.webp\"); background-repeat: repeat-y; background-size: cover; } #footer { color: aliceblue; text-align: center; height: 20%; margin: 0; padding: 0; background-color: rgb(44, 50, 62); } #WeatherInfo { display: flex; flex-wrap: wrap; justify-content: space-around; } .weatherBlock { margin: 20px; width: 300px; background-color: rgba(0, 0, 0, 0.339); border-radius: 20px; padding: 20px; } </style></head><body> <div class=\"main\"> <img id=\"logo\" src=\"https://raw.githubusercontent.com/pranavbisaria/WeatherKNOW/master/src/main/resources/static/logo.png\" alt=\"logo\"> <div id=\"content\"> <h2 style=\"text-align: center;\">Hey ");
         message.append(subscription.getName())
-                .append(", Your Weather Updates!</h2>");
+                .append(", Your Weather Updates!</h2> <div id=\"WeatherInfo\">");
 
         subscription.getCitiesList().forEach((city)->{
-            message.append("<div id=\"weatherBlock\"> <h1>")
+            message.append(" <div class=\"weatherBlock\"> <h1>")
                     .append(city.getName())
                     .append("</h1> <h3>")
                     .append(city.getTz_id())
-                    .append("</h3><div><p>Last Updated: ")
+                    .append("</h3> <div> <p>Last Updated: ")
                     .append(city.getLast_updated())
-                    .append("</p><b>Temperature (℃): </b>")
+                    .append("</p> <b>Temperature (&deg;C): </b>")
                     .append(city.getTemp_c())
-                    .append(" <b>Temperature (℉): </b>")
+                    .append("  <b>Temperature (&deg;F): </b>")
                     .append(city.getTemp_f())
-                    .append("<div><h2>Weather Conditions:</h2><div>")
+                    .append("<div> <h2>Weather Conditions:</h2> <div>")
                     .append(city.getCondition().getText().toUpperCase())
-                    .append(": <img src=\"")
+                    .append(": <img src=\"https:")
                     .append(city.getCondition().getIcon())
-                    .append("\" alt=\"weatherIcon\"></div></div><b>Humidity: </b>")
+                    .append("\" alt=\"weatherIcon\"> </div> </div> <b>Humidity: </b>")
                     .append(city.getHumidity())
-                    .append("<b>Cloud: </b>")
+                    .append(" <b>Cloud: </b>")
                     .append(city.getCloud())
-                    .append("</div></div>");
+                    .append(" </div> </div> ");
         });
-        message.append("</div></div><div id=\"footer\"><h3><a href=\"#\">Unsubscribe to all services<a></h3><p>WeathterKNOW &copy; Pranav Bisaria 2023</p></div></body></html>");
+        message.append("</div> </div> </div> <div id=\"footer\"> <h3><a href=\"#\">Unsubscribe from all services</a></h3> <p>WeathterKNOW &copy; Pranav Bisaria 2023</p> </div></body></html>");
         String to = subscription.getEmail();
         this.emailService.sendEmail(subject, message.toString(), to);
     }

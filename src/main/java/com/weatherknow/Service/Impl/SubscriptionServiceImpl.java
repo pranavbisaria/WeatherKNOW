@@ -38,7 +38,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         List<String> citiesNotFound = new ArrayList<>(0);
         List<Cities> citiesFound = new ArrayList<>(0);
 
-        subscriptionModel.Cities().forEach((city)->{
+        subscriptionModel.cities().forEach((city)->{
             city.toLowerCase().trim();
             Optional<Cities> cities = this.citiesRepo.findById(city);
             if(cities.isEmpty()) {
