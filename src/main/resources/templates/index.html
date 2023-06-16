@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Subscription Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .city-container {
+      padding: 5px;
+      margin: 20px;
+      border: 1px solid black;
+    }
+
+    .city-container input {
+      margin-right: 5px;
+    }
+
+    #result {
+      margin-top: 10px;
+    }
+
+    #subscription-form{
+      width: 300px;
+    }
+
+    input{
+      margin: 5px;
+    }
+
+    #loader {
+      display: none;
+      margin: 20px;
+    }
+
+    #loader::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <img id="logo"
+       src="https://raw.githubusercontent.com/pranavbisaria/WeatherKNOW/master/src/main/resources/static/logo.png"
+       alt="logo"
+       style="width: 100%"
+  >
+  <h1>Email Subscription</h1>
+
+  <form id="subscription-form" method="POST">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="city-container">
+      <label for="cities">Cities to be subscribed:</label><br>
+      <button type="button" id="add-city">+</button>
+      <button type="button" id="remove-city">-</button><br>
+      <input type="text" id="cities" name="cities[]" required>
+    </div>
+
+    <div id="loader"></div>
+    <button type="submit" id="submit">Subscribe</button>
+  </form>
+
+  <div id="result"></div>
+</div>
+
+<script>
+  // Function to add a new city input field
+  function addCityField() {
+    const cityContainer = document.querySelector('.city-container');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'cities[]';
+    input.required = true;
+    cityContainer.appendChild(input);
+  }
+
+  // Function to remove a city input field
+  function removeCityField() {
+    const cityContainer = document.querySelector('.city-container');
+    const inputs = cityContainer.querySelectorAll('input[type="text"]');
+    if (inputs.length > 1) {
+      cityContainer.removeChild(inputs[inputs.length - 1]);
+    }
+  }
+
+  document.getElementById('add-city').addEventListener('click', addCityField);
+
+  document.getElementById('remove-city').addEventListener('click', removeCityField);
+
+  document.getElementById('subscription-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    document.getElementById('loader').style.display = "block";
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/subscribe', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          document.getElementById('loader').style.display = 'none';
+          document.getElementById('submit').disabled = true;
+          document.getElementById('result').innerHTML = response.message;
+        } else {
+          document.getElementById('loader').style.display = 'none';
+          document.getElementById('result').innerHTML = 'An error occurred.';
+        }
+      }
+    };
+
+    const payload = {
+      name: formData.get('name'),
+      cities: Array.from(formData.getAll('cities[]')),
+      email: formData.get('email')
+    };
+
+    xhr.send(JSON.stringify(payload));
+  });
+</script>
+</body>
+</html>

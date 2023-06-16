@@ -30,7 +30,7 @@
     </style>
     <script>
         function unsubscribe() {
-            var email = `${email}`;
+            var email = document.getElementById("button").getAttribute("data-email");
             let btn = document.getElementById("button");
             let xhr = new XMLHttpRequest();
             xhr.open("DELETE", "/unsubscribe?email=" + email, true);
@@ -56,7 +56,7 @@
     >
     <h1>Email Unsubscription</h1>
     <p id="text">Click the button below to unsubscribe from email notifications.</p>
-    <button onclick="unsubscribe()" id="button">Unsubscribe</button>
+    <button onclick="unsubscribe()" id="button" th:data-email="${email}">Unsubscribe</button>
 </div>
 </body>
 </html>
